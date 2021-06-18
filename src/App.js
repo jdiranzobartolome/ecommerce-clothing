@@ -12,7 +12,7 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 // So we need to send this as props to the components that need authorization
 // We need to store all this info in the app, so we make App.js
 // into a class element so it can have a state.
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends React.Component {
   constructor() {
@@ -40,8 +40,31 @@ class App extends React.Component {
     // to do anything else. 
 
     //Listening to uthentication state changes from firebase
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        
+        // Listener that listens to any changes on the snapShot data. 
+        // We do not change the user data in out website, so it will not trigger except
+        // for the first time, where it just triggers once for giving the original snapShot
+        // info. That is what we use here.  
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          })
+
+        });
+        
+      } else {
+        // If the userAuth is null, we still need to set the currentUser to null. 
+        this.setState({
+          currentUser: userAuth
+        })
+      }
+      
     })
   }
 
