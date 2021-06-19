@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 // Special react syntax for importing SVG images
 import { ReactComponent as Logo } from '../../assets/crown.svg';
@@ -45,9 +47,9 @@ const Header = ({ currentUser, hidden }) => (
 // the power to access the state.user.currentUser state from the user.Reducer
 // This element will receive it as a prop, but it will be from the store, not from the 
 // parent. So no prop drilling needed anymore. 
-const mapStateToProps = ({user: { currentUser }, cart: { hidden }}) => ({
-    currentUser,
-    hidden
+const mapStateToProps = (state) => ({
+    currentUser: selectCurrentUser(state),
+    hidden: selectCartHidden(state)
 })
 
 export default connect(mapStateToProps)(Header)

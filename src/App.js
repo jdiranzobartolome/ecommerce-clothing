@@ -6,9 +6,11 @@ import './App.scss';
 
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
+import CheckoutPage from './pages/checkout/checkout.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { setCurrentUser } from  './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selector';
 
 // this is gives us the auth state of a logged in user. 
 // So we need to send this as props to the components that need authorization
@@ -71,6 +73,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/'component={HomePage} />
           <Route  path='/shop'component={ShopPage} />
+          <Route  exact path='/checkout'component={CheckoutPage} />
           <Route  exact path='/signin'
              render={() => this.props.currentUser
             ? <Redirect to='/' />
@@ -83,8 +86,13 @@ class App extends React.Component {
   
 }
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+
+// This could also be done with { createStructureSelector } from 'reselect'
+// for avoiding having to write (state) every time.
+// However, I find it more intutitive like this. 
+
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state)
 })
 
 const mapDispatchToProps = dispatch => ({

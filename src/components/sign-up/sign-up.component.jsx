@@ -61,7 +61,9 @@ class SignUp extends React.Component {
         <h2 className='title'>I do not have a account</h2>
         <span>Sign up with your email and password</span>
 
-        <form className='sign-up-form' onSubmit={this.handleSubmit}>
+        {/* autocomplete='off' and autocomplete='new password' are methods for 
+        avoiding browsers to autofill forms. */}
+        <form autocomplete="off" className='sign-up-form' onSubmit={this.handleSubmit}>
           <FormInput
             type='text'
             name='displayName'
@@ -83,6 +85,7 @@ class SignUp extends React.Component {
             value={password}
             onChange={this.handleChange}
             label='Password'
+            autocomplete="new-password"
             required
           />
           <FormInput type="password" 
@@ -90,6 +93,7 @@ class SignUp extends React.Component {
             value={confirmPassword}
             onChange={this.handleChange}
             label='Confirm Password'
+            autocomplete="new-password"
             required
           />
 
